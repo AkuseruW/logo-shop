@@ -47,7 +47,6 @@ export const authOptions: NextAuthOptions = {
           email,
           name,
           role,
-          accessToken: signJwtAccessToken({ id, email, name, role })
         }
       }
 

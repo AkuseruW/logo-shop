@@ -1,9 +1,8 @@
 'use client'
-import { useForm } from "react-hook-form";
-import React, { useState, useEffect } from 'react';
-import { toast } from "react-toastify";
+import { useState } from 'react';
 import { signIn } from "next-auth/react";
-
+import { useForm } from "react-hook-form";
+import { registerActions } from "@/controller/actions/auth/_register";
 
 type Inputs = {
     name: string;
@@ -12,88 +11,49 @@ type Inputs = {
     confirmPassword: string;
 };
 
-interface SignUpData {
-    name: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-}
-
-interface LoginRequest {
-    name: string;
-    email: string;
-    password: string;
-}
-
-interface LoginResponse {
-    token: string;
-    user: {
-        id: string;
-        name: string;
-        email: string;
-    };
-}
-
-export default function SignUpForm() {
+const SignUpForm = () => {
     const [loading, setLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     const [isRGPDChecked, setIsRGPDChecked] = useState(false);
     const [showRGPDError, setShowRGPDError] = useState(false);
-
-    const {
-        register,
-        handleSubmit,
-        watch,
-        formState: { errors },
-    } = useForm<Inputs>();
+    const { register, handleSubmit, watch, formState: { errors } } = useForm<Inputs>();
 
     const handleRGPDCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setIsRGPDChecked(e.target.checked);
         setShowRGPDError(false);
     };
 
-
-    const onSubmit = async (data: SignUpData) => {
+    const onSubmit = handleSubmit(async data => {
         if (isRGPDChecked && data.password === data.confirmPassword) {
-            try {
-                setLoading(true)
-                const res = await fetch(`/api/register`, {
-                    cache: 'no-store',
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data),
-                    credentials: 'include'
-                })
+            setLoading(true)
+            const register = await registerActions(data);
 
-                const result = await res.json();
-
-                if (res.ok) {
-                    toast.success('Your account created successfully')
-                }
-
-            } catch (error) {
-
-            } finally {
+            if (register?.error) {
                 setLoading(false)
-                try {
-                    await signIn('credentials', {
-                        redirect: true,
-                        email: data.email,
-                        password: data.password,
-                        callbackUrl: '/'
-                    });
-                } catch (error) {
+                setErrorMessage(register.error)
+            }
 
-                }
+            if (register?.success) {
+                setLoading(false)
+                await signIn('credentials', {
+                    redirect: true,
+                    email: data.email,
+                    password: data.password,
+                    callbackUrl: '/'
+                });
             }
         } else {
             setShowRGPDError(true);
         }
-    }
+    });
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={onSubmit} className="space-y-6">
+            {errorMessage && (
+                <div className="text-center bg-red-100 text-red-500 py-2 px-4 rounded-lg mb-2">
+                    <span className="font-semibold">{errorMessage}</span>
+                </div>
+            )}
             <div>
                 <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
                     Full Name
@@ -193,3 +153,6 @@ export default function SignUpForm() {
         </form>
     );
 }
+
+
+export default SignUpForm

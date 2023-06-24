@@ -25,8 +25,6 @@ const Home = async () => {
   const { products } = await getProduct()
   const { categories } = await getCategories()
 
-  console.log(products, categories)
-
   return (
     <main>
       <Banner />

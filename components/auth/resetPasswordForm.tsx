@@ -1,26 +1,23 @@
 'use client'
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { resetTokenReqActions } from '@/controller/actions/auth/_resetToken';
 
 const ResetPasswordForm = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const [isLoading, setIsLoading] = useState(false);
-    const [isEmailSent, setIsEmailSent] = useState(false);
+    const [isEmailSent, setIsEmailSent] = useState("");
 
 
     const onSubmit = async (data: any) => {
         setIsLoading(true);
 
-        const res = await fetch(`/api/password-reset`, {
-            method: 'POST',
-            body: JSON.stringify(data)
-        })
+        const resetTokenReq = await resetTokenReqActions(data)
 
-        if (res.ok) {
-            setIsEmailSent(true);
+        if (resetTokenReq.message) {
+            setIsEmailSent(resetTokenReq.message)
+            setIsLoading(false);
         }
-
-        setIsLoading(false);
     };
 
     return (
