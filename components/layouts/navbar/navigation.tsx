@@ -4,7 +4,6 @@ import * as React from "react"
 import Link from "next/link"
 
 import { cn } from "@/lib/utils"
-import Products from '../../../app/(site)/products/(products)/page';
 import {
     NavigationMenu,
     NavigationMenuContent,
