@@ -90,7 +90,7 @@ model Review {
   authorId  String?
   productId String
   author    User?    @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  product   Products @relation(fields: [productId], references: [id])
+  product   Products @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@map("reviews")
 }

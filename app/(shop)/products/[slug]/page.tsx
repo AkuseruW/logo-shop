@@ -7,17 +7,17 @@ import { getSession } from '@/lib/next-auth';
 import Breadcrumbs from '@/components/breadcrumbs';
 import Options from "@/components/layouts/product/options";
 import AddCommentSection from '@/components/commentSection';
-import { GetProduct } from '@/controller/products/getProduct';
+import { getProductFavorite } from '@/controller/products/getProduct';
 import AddToFavorite from '@/components/layouts/product/addToFavorite';
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const { slug } = params;
-  const { product } = await GetProduct(slug)
+  const { product } = await getProductFavorite(slug)
   return { title: product.name };
 }
 
 const getProduct = async ({ slug }: { slug: string }) => {
-  const product = await GetProduct(slug)
+  const product = await getProductFavorite(slug)
   return product
 };
 

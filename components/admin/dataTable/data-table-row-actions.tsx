@@ -7,28 +7,28 @@ import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal, Pen, Trash, Eye } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { deleteProduct } from "@/controller/actions/admin/_delete";
+import { useToast } from "@/components/ui/use-toast";
 
 
 export function DataTableRowActionsProducts({ row }: any) {
     const router = useRouter();
+    const { toast } = useToast()
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const { data: session } = useSession()
-    // @ts-ignore
-    const token = session?.user.accessToken
 
-    async function handleDelete() {
-        try {
-            await fetch(`/api/products?id=${row.original.id}`, {
-                method: "DELETE",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
-            });
-            router.refresh();
-            setModalIsOpen(false);
-        } catch (error) {
-            getError(error);
+    const handleDelete = async () => {
+        const productID = row.original.id
+        const data = { productID, session }
+
+        const productDelete = await deleteProduct(data)
+        if (productDelete?.message) {
+            setModalIsOpen(false)
+            toast({
+                title: "Your product has been deleted.",
+                description: `${productDelete.message}`,
+            })
+            router.refresh()
         }
     }
 
@@ -50,7 +50,7 @@ export function DataTableRowActionsProducts({ row }: any) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[160px]">
-                    <Link href={`/dashboard/products/view/${row.original.slug}`}>
+                    <Link href={`/dashboard/products/${row.original.slug}`}>
                         <DropdownMenuItem>
                             <Eye className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
                             View
@@ -72,7 +72,6 @@ export function DataTableRowActionsProducts({ row }: any) {
         </>
     );
 }
-
 
 export const DataTableRowActionsCategories = ({ row }: any) => {
     const router = useRouter();

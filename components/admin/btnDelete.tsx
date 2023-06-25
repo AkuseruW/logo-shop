@@ -1,8 +1,9 @@
 "use client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { getError } from "@/utils/error";
 import Modal from "../modal";
+import { useState } from "react";
+import { useToast } from "../ui/use-toast";
+import { useRouter } from "next/navigation";
+import { deleteProduct } from "@/controller/actions/admin/_delete";
 
 export default function BtnDelete({
   items,
@@ -12,24 +13,26 @@ export default function BtnDelete({
   session: any;
 }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const token = session.user.accessToken;
+  const token = session;
   const router = useRouter();
+  const { toast } = useToast()
+  console.log(items)
 
   const handleDelete = async () => {
-    try {
-      await fetch(`/api/products?id=${items.id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-      router.back();
-      setModalIsOpen(false);
-    } catch (error) {
-      getError(error);
+    const productID = items.id
+    const data = { productID, session }
+    const productDelete = await deleteProduct(data)
+    if (productDelete?.message) {
+      setModalIsOpen(false)
+      toast({
+        title: "Your product has been deleted.",
+        description: `${productDelete.message}`,
+      })
+      router.push('/dashboard/products')
+      router.refresh()
     }
   };
+
   return (
     <>
       <Modal

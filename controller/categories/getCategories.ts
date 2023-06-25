@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 
 
-export async function GetCategories() {
+export async function getAllCategories() {
     const categories = await prisma.categories.findMany({
         orderBy: { createdAt: 'desc' },
     });

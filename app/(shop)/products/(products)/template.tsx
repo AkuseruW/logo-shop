@@ -1,13 +1,11 @@
 import Aside from "@/components/layouts/products/aside";
 import Filter from "@/components/layouts/products/filter";
-import { GetCategories } from "@/controller/categories/GetCategories";
-import { prisma } from "@/lib/prisma";
+import { getAllCategories } from "@/controller/categories/getCategories";
 
 const getCategories = async () => {
-    const categories = await GetCategories()
+    const categories = await getAllCategories()
     return categories
 }
-
 
 export default async function Template({ children }: { children: React.ReactNode }) {
     const { categories } = await getCategories()

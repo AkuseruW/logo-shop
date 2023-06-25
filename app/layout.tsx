@@ -1,6 +1,7 @@
 import './globals.css'
-import CookieConsent from '@/components/CookieConsent'
 import { Providers } from './providers'
+import { Toaster } from "@/components/ui/toaster"
+import CookieConsent from '@/components/CookieConsent'
 
 
 export default function RootLayout({
@@ -13,6 +14,7 @@ export default function RootLayout({
       <body>
         <Providers>
           {children}
+          <Toaster />
         </Providers>
         <CookieConsent />
       </body>

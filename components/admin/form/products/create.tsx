@@ -1,9 +1,11 @@
 'use client'
-import React, { useState, useEffect } from 'react';
 import slugify from 'slugify';
+import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import React, { useState, useEffect } from 'react';
+import { useToast } from "@/components/ui/use-toast";
+import { productCreate } from '@/controller/actions/admin/_create';
 
 
 type Data = {
@@ -18,14 +20,6 @@ type Data = {
     category: string;
 };
 
-type Category = {
-    id: string;
-    name: string;
-    image: string;
-    description: string;
-    createdAt: string;
-    updatedAt: string;
-};
 
 type ProductFormProps = {
     session: any;
@@ -35,7 +29,7 @@ type ProductFormProps = {
 
 export function ProductForm({ session, categories }: ProductFormProps) {
     const router = useRouter()
-    const { accessToken } = session?.user
+    const { toast } = useToast()
     const [name, setName] = useState('');
     const [loading, setLoading] = useState(false);
     const [selectedFile, setSelectedFile] = useState<FileList | null>(null);
@@ -66,33 +60,30 @@ export function ProductForm({ session, categories }: ProductFormProps) {
         const formData = new FormData();
         if (selectedFile) {
             formData.append('image', selectedFile[0]);
-        } else {
-            return;
-        }
+            const dataWithImage = { ...data, image: formData, session };
+            setLoading(true);
+            const newProduct = await productCreate(dataWithImage);
 
-        formData.append('data', JSON.stringify(data));
-
-        try {
-            setLoading(true)
-            const response = await fetch(`/api/products`, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            });
-
-            const result = await response.json();
-
-            if (response.ok) {
-                router.refresh
-                router.push(`/dashboard/products?created=${data.name}`)
-            } else {
+            if (newProduct.message) {
+                setLoading(false);
+                router.refresh();
+                router.push(`/dashboard/products?created=${data.name}`);
             }
 
-        } catch (error) {
-        } finally {
-            setLoading(false)
+            if (newProduct.error) {
+                setLoading(false);
+                toast({
+                    variant: "destructive",
+                    title: "Uh oh! Something went wrong.",
+                    description: `${newProduct.error}`,
+                });
+            }
+        } else {
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: "No file selected. Please choose a file.",
+            });
         }
     };
 

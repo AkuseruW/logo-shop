@@ -1,6 +1,5 @@
 'use client'
 import { useEffect, useState } from 'react';
-import { getError } from '@/utils/error';
 import { Categories, Products } from '@prisma/client';
 import { useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -12,18 +11,19 @@ type FormData = {
     price: number;
     stock: number;
     brand: string;
-    description?: string;
+    description: string;
     slug: string;
     cover: FileList;
     publish?: boolean;
-    category: any;
+    category: Categories;
 };
 
 type ProductFormProps = {
     session: any;
-    product: FormData;
+    product: Products;
     categories: Categories[];
 };
+
 
 export function ProductFormUpdate({ session, product, categories }: ProductFormProps) {
     const router = useRouter()
@@ -80,12 +80,13 @@ export function ProductFormUpdate({ session, product, categories }: ProductFormP
             setValue('name', product.name)
             setValue('brand', product.brand)
             setValue('stock', product.stock)
-            setValue('description', product.description)
+            setValue('description', product.description || '')
             setValue('publish', product.publish)
             setValue('price', product.price)
             setValue('slug', product.slug)
             setValue('price', product.price)
-            setValue('category', product.category?.[0]?.id || '');
+            // @ts-ignore
+            setValue('category', product.category?.[0]?.id);
         }
     }, [product, setValue]);
 
