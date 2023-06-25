@@ -2,9 +2,10 @@
 import { useState } from 'react';
 import SearchDialog from './search';
 import MobileMenu from './mobileMenu';
+import { Products } from '@prisma/client';
 import CartModal from '@/components/cart/modal';
 import { NavigationMenuHead } from './navigation';
-import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon, HeartIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, HeartIcon } from '@heroicons/react/24/outline';
 
 
 const navigation = [
@@ -14,7 +15,7 @@ const navigation = [
   { name: 'Blog', href: '/blog' },
 ];
 
-const Navbar = () => {
+const Navbar = ({ products }: { products: Products[] }) => {
   const [open, setOpen] = useState(false);
   const [cartIsOpen, setCartIsOpen] = useState(false);
   const [openSearch, setOpenSearch] = useState(false);
@@ -63,7 +64,7 @@ const Navbar = () => {
                 >
                   <MagnifyingGlassIcon className="h-6 w-6" aria-hidden="true" />
                 </button>
-                <SearchDialog open={openSearch} onOpenChange={setOpenSearch} />
+                <SearchDialog open={openSearch} onOpenChange={setOpenSearch} products={products} />
               </div>
 
               {/* Favorite */}

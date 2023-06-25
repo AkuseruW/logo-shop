@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 
+
 export async function GetLastedProducts() {
     const products = await prisma.products.findMany({
         where: { publish: true },
@@ -11,7 +12,17 @@ export async function GetLastedProducts() {
     return { products }
 }
 
-export async function GetProducts(searchParams: { page: string, category: string, search: string }) {
+export async function getAllProducts() {
+
+    const products = await prisma.products.findMany({
+        orderBy: { createdAt: 'desc' },
+    });
+
+    prisma.$disconnect()
+    return { products }
+}
+
+export async function getProductsPaginate(searchParams: { page: string, category: string, search: string }) {
     const page = searchParams.page
     const category = searchParams.category
     const search = searchParams.search

@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import Pagination from "@/components/pagination";
-import { GetProducts } from '@/controller/products/getProducts';
+import { getProductsPaginate } from '@/controller/products/getProducts';
 import ProductGridItems from '@/components/layouts/product-grid-items';
 
 
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 const getProducts = async (searchParams: string) => {
-    const data = await GetProducts(searchParams as any)
+    const data = await getProductsPaginate(searchParams as any)
     return data
 }
 

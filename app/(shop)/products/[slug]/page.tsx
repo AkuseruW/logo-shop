@@ -64,7 +64,7 @@ export default async function Product({ params }: any) {
         <div className="lg:border-r lg:border-gray-200 lg:pr-8">
           <div className="flex items-center ml-2">
             <h2 className="text-xl font-bold pb-8">{product.name}</h2>
-            <AddToFavorite product={product} session={userSession} isFavorite={product?.isFavorite} />
+            {/* <AddToFavorite product={product} session={userSession} isFavorite={product?.isFavorite} /> */}
           </div>
           <p className="text-lg">
             {product.description}

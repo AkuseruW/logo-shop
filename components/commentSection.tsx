@@ -1,11 +1,14 @@
 'use client'
-import React, { useState, ChangeEvent, FormEvent } from 'react';
 import Rating from 'react-rating';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar } from '@fortawesome/free-solid-svg-icons';
-import { faStar as farStar } from '@fortawesome/free-regular-svg-icons';
 import { Products } from '@prisma/client';
 import { useRouter } from 'next/navigation';
+import { useToast } from "@/components/ui/use-toast";
+import { useState, ChangeEvent, FormEvent } from 'react';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { addReviewAction } from '@/controller/actions/_addReviews';
+import { faStar as farStar } from '@fortawesome/free-regular-svg-icons';
+
 
 interface AddCommentSectionProps {
   session: any;
@@ -17,6 +20,7 @@ const AddCommentSection: React.FC<AddCommentSectionProps> = ({
   product,
 }) => {
   const router = useRouter()
+  const { toast } = useToast()
   const [comment, setComment] = useState('')
   const [ratingValue, setRatingValue] = useState(0)
   const [errorMessage, setErrorMessage] = useState('')
@@ -29,36 +33,33 @@ const AddCommentSection: React.FC<AddCommentSectionProps> = ({
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
 
-    if (!session) return
-
     if (comment.trim() === '') {
       setErrorMessage('Please enter a comment.')
       return
     }
 
-    try {
-      const formData = new FormData();
-      formData.append('comment', comment)
-      formData.append('rating', ratingValue.toString())
-      formData.append('session', JSON.stringify(session))
-      formData.append('product', JSON.stringify(product))
+    const data = { comment: comment, rating: ratingValue, session: session, product: product };
 
-      const res = await fetch(`/api/reviews`, {
-        method: 'POST',
-        body: formData,
-      });
+    const reviewCreated = await addReviewAction(data)
 
-      if (res.ok) {
-        setComment('')
-        setRatingValue(0)
-        router.refresh()
-      } else {
-        setErrorMessage(`Failed to add comment and rating: ${res.status} - ${errorMessage}`)
-      }
-    } catch (error) {
-      console.error('Failed to add comment and rating:', error)
-      setErrorMessage('An error occurred while adding comment and rating.')
+    if (reviewCreated.error) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: `${reviewCreated.error}`,
+      })
     }
+
+    if (reviewCreated.message) {
+      setComment('')
+      setRatingValue(0)
+      toast({
+        title: "Your review has been submitted",
+        description: `${reviewCreated.message}`,
+      })
+      router.refresh()
+    }
+
   };
 
 

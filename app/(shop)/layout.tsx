@@ -1,5 +1,6 @@
 import Wrapper from '@/components/wrapper'
 import Footer from '@/components/layouts/footer'
+import { Toaster } from "@/components/ui/toaster"
 import Header from '@/components/layouts/header/header'
 
 export const metadata = {
@@ -19,6 +20,7 @@ export default function RootLayout({
       <div className="min-h-[80vh]">
         {children}
       </div>
+      <Toaster />
       <Footer />
     </Wrapper>
   )

@@ -23,7 +23,7 @@ const SignUpForm = () => {
         setShowRGPDError(false);
     };
 
-    const onSubmit = handleSubmit(async data => {
+    const onSubmit = async (data: any) => {
         if (isRGPDChecked && data.password === data.confirmPassword) {
             setLoading(true)
             const register = await registerActions(data);
@@ -45,10 +45,10 @@ const SignUpForm = () => {
         } else {
             setShowRGPDError(true);
         }
-    });
+    }
 
     return (
-        <form onSubmit={onSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {errorMessage && (
                 <div className="text-center bg-red-100 text-red-500 py-2 px-4 rounded-lg mb-2">
                     <span className="font-semibold">{errorMessage}</span>
@@ -153,6 +153,5 @@ const SignUpForm = () => {
         </form>
     );
 }
-
 
 export default SignUpForm
