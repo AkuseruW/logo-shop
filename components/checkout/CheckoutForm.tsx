@@ -1,9 +1,9 @@
 'use client'
-import { useForm } from "react-hook-form";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
-import { SHIPPING_ADDRESS_KEY } from "@/utils/const";
+import { useForm } from "react-hook-form";
 import { useRouter } from 'next/navigation';
+import { SHIPPING_ADDRESS_KEY } from "@/utils/const";
 
 type Inputs = {
     firstName: string;
@@ -18,12 +18,7 @@ type Inputs = {
 const CheckoutForm = () => {
     const router = useRouter();
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        setValue,
-    } = useForm<Inputs>();
+    const { register, handleSubmit, formState: { errors }, setValue } = useForm<Inputs>();
 
     const onSubmit = (data: Inputs) => {
         Cookies.set(SHIPPING_ADDRESS_KEY, JSON.stringify(data));

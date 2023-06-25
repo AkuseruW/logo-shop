@@ -1,11 +1,11 @@
 import React from 'react'
-import { Metadata } from 'next';
 import Image from 'next/image';
-import { Order } from '@prisma/client';
-import { getServerSession } from 'next-auth'
+import { Metadata } from 'next';
+import { getSession } from '@/lib/next-auth';
 import Pagination from "@/components/pagination";
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import Breadcrumbs from '@/components/breadcrumbs';
+import { SessionProps } from '@/type';
+import { getMyOrder } from '@/controller/profile/getMyOrder';
 
 export const dynamic = 'force-dynamic'
 
@@ -13,25 +13,15 @@ export const metadata: Metadata = {
     title: 'My Orders',
 };
 
-const getOrder = async (searchParams: string) => {
-    const session = await getServerSession(authOptions)
-    {/* @ts-ignore */ }
-    const token = session?.user?.accessToken;
-    const queryParams = new URLSearchParams(searchParams);
-    const res = await fetch(`${process.env.BASE_URL}/api/profile/myorders?${queryParams}`, {
-        cache: 'no-store',
-        headers: {
-            Authorization: `Bearer ${token}`,
-        }
-    });
+const getOrder = async (searchParams: any) => {
+    const session = await getSession()
+    const myOrders = await getMyOrder(session as SessionProps, searchParams as any)
 
-    if (!res.ok) return { myOrders: [], totalPages: 0 };
-
-    return res.json()
+    return myOrders
 };
 
 const Orders = async ({ searchParams }: { searchParams: string }) => {
-    const { myOrders, totalPages }: { myOrders: Order[], totalPages: number } = await getOrder(searchParams)
+    const { myOrders, totalPages } = await getOrder(searchParams)
     const url = '/profile/orders';
 
     if (myOrders && myOrders.length > 0) {
@@ -44,7 +34,7 @@ const Orders = async ({ searchParams }: { searchParams: string }) => {
                         <div key={order.id} className='py-10 '>
                             <h3 className='text-xl font-semibold border-b border-gray-200 py-4'>Order #{order.id}</h3>
                             {/* @ts-ignore */}
-                            {order.orderItems.map((orderItem, itemIndex: number) => (
+                            {order.orderItems.map((orderItem: Product, itemIndex: number) => (
                                 <>
                                     {/* @ts-ignore */}
                                     <div key={orderItem.id} className={`flex items-center space-x-6 py-6 ${itemIndex !== order.orderItems.length - 1 ? 'border-b border-gray-200' : ''}`}>
@@ -92,6 +82,7 @@ const Orders = async ({ searchParams }: { searchParams: string }) => {
             </div>
         )
     }
+
 }
 
 export default Orders

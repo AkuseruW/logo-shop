@@ -1,6 +1,6 @@
-import { getSession } from "@/lib/next-auth";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
+import { getSession } from "@/lib/next-auth";
 
 export async function GetProduct(slug: string) {
     const session = await getSession();

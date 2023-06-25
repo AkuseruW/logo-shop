@@ -2,7 +2,6 @@
 import { getError } from '@/utils/error';
 import React from 'react';
 import { useForm } from "react-hook-form";
-import { toast } from 'react-toastify';
 
 interface PasswordData {
     password: string;
@@ -33,12 +32,9 @@ export const FormUpdateInfoPassword = ({ session }: { session: any }) => {
                 });
                 if (res.ok) {
                     const response = await res.json();
-                    toast.success(response.message);
                 } else {
-                    toast.error('An error occurred while updating the password');
                 }
             } catch (error) {
-                toast.error(getError(error));
             }
         }
     };

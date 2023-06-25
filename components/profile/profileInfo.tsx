@@ -5,11 +5,13 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import Breadcrumbs from '../breadcrumbs';
+import { updatePasswordActions } from '@/controller/actions/auth/profile/_changeInfo';
 
 const ProfileInfoTabs = ({ session }: any) => {
-    const token = session.accessToken
-    const [errors, setErrors] = useState<any>(null);
+
+    const [message, setMessage] = useState<any>(null);
+    const [error, setError] = useState<any>(null);
+
     const [passwordData, setPasswordData] = useState({
         currentPassword: '',
         newPassword: '',
@@ -19,42 +21,31 @@ const ProfileInfoTabs = ({ session }: any) => {
     const handleSavePassword = async () => {
         if (passwordData.newPassword === passwordData.confirmNewPassword) {
             const { currentPassword, newPassword } = passwordData
-            try {
-                const res = await fetch(`/api/profile/update-password`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({ currentPassword, newPassword }),
-                });
-                if (res.ok) {
-                    const response = await res.json();
-                    setErrors(null)
-                } else {
-                    const errorData = await res.json();
-                    setErrors(errorData.errors);
-                }
-            } catch (error) {
-                setErrors({ message: 'An error occurred' });
-            } finally {
-                setPasswordData({
-                    currentPassword: '',
-                    newPassword: '',
-                    confirmNewPassword: '',
-                });
+            const passwordUpdate = await updatePasswordActions(currentPassword, newPassword, session)
+
+            if (passwordUpdate?.error) {
+                setMessage(null)
+                setError(passwordUpdate?.error)
             }
-        } else {
-            setErrors({ confirmPassword: 'Passwords do not match' });
+
+            if (passwordUpdate?.message) {
+                setError(null)
+                setMessage(passwordUpdate?.message)
+            }
         }
     };
 
     return (
         <Tabs defaultValue="account" className="w-[800px] mt-20 mx-auto flex flex-col items-center">
             <div className="mb-5 w-full">
-                {errors && typeof errors === 'object' && 'message' in errors && (
+                {error && (
                     <div className="text-center bg-red-100 text-red-500 py-2 px-4 rounded-lg mb-2">
-                        {errors.message}
+                        {error}
+                    </div>
+                )}
+                {message && (
+                    <div className="text-center bg-green-100 text-green-500 py-2 px-4 rounded-lg mb-2">
+                        {message}
                     </div>
                 )}
             </div>
@@ -66,9 +57,6 @@ const ProfileInfoTabs = ({ session }: any) => {
                 <Card>
                     <CardHeader>
                         <CardTitle>Account</CardTitle>
-                        <CardDescription>
-                            Make changes to your account here. Click save when you&apos;re done.
-                        </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-2">
                         <div className="space-y-1">

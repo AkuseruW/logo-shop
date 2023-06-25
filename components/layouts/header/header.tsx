@@ -1,7 +1,8 @@
-import TopHeader from './top-head';
 import Navbar from '../navbar';
+import TopHeader from './top-head';
 
-export default function Header() {
+const Header = async () => {
+
     return (
         <header className="">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -15,3 +16,5 @@ export default function Header() {
         </header>
     );
 }
+
+export default Header

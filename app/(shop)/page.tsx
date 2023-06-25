@@ -4,7 +4,7 @@ import Categories from "@/components/categories";
 import Banner from "@/components/layouts/carousel";
 import ProductGridItems from "@/components/layouts/product-grid-items";
 import { GetSelectedCategories } from "@/controller/categories/GetCategories"
-import { GetLastedProducts } from "@/controller/products/GetProducts"
+import { GetLastedProducts } from "@/controller/products/getProducts"
 
 export const metadata: Metadata = {
   title: 'Home',

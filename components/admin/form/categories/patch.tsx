@@ -1,6 +1,5 @@
 'use client'
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import { getError } from '@/utils/error';
 import { Categories } from '@prisma/client';
 import { useRouter } from 'next/navigation';
@@ -63,10 +62,8 @@ export function CategoryFormUpdate({ session, category }: CategoryFormUpdateProp
                 router.push(`/dashboard/categories/view/${data.slug}?updated=successfully`)
                 router.refresh();
             } else {
-                toast.error(getError(result));
             }
         } catch (error) {
-            toast.error(getError(error));
         } finally {
             setIsLoading(false);
         }

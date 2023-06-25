@@ -1,6 +1,6 @@
-import Header from '@/components/layouts/header/header'
-import Footer from '@/components/layouts/footer'
 import Wrapper from '@/components/wrapper'
+import Footer from '@/components/layouts/footer'
+import Header from '@/components/layouts/header/header'
 
 export const metadata = {
   title: 'Create Next App',
@@ -14,6 +14,7 @@ export default function RootLayout({
 }) {
   return (
     <Wrapper className="wrapper-class">
+      {/* @ts-expect-error Server Component */}
       <Header />
       <div className="min-h-[80vh]">
         {children}

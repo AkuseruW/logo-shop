@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import slugify from 'slugify';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
 import { getError } from '@/utils/error';
 import { useRouter } from 'next/navigation';
 
@@ -67,10 +66,8 @@ export function CategoryFormCreate({ session }: ProductFormProps) {
                 router.refresh
                 router.push(`/dashboard/categories?created=${data.name}`)
             } else {
-                toast(getError(result.message));
             }
         } catch (error) {
-            toast.error('An error occurred while creating the category');
         } finally {
             setLoading(false)
         }

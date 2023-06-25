@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import slugify from 'slugify';
 import { useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
@@ -68,7 +67,6 @@ export function ProductForm({ session, categories }: ProductFormProps) {
         if (selectedFile) {
             formData.append('image', selectedFile[0]);
         } else {
-            toast.error('Image is required');
             return;
         }
 
@@ -90,11 +88,9 @@ export function ProductForm({ session, categories }: ProductFormProps) {
                 router.refresh
                 router.push(`/dashboard/products?created=${data.name}`)
             } else {
-                toast.error(result.message);
             }
 
         } catch (error) {
-            toast.error('An error occurred while creating the product');
         } finally {
             setLoading(false)
         }

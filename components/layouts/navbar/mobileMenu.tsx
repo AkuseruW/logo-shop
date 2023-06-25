@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
@@ -42,23 +43,23 @@ const MobileMenu = ({ open, onClose, navigation }: { open: boolean, onClose: () 
                         <div className="space-y-6 border-t border-gray-200 px-4 py-6">
                             {navigation.map((page) => (
                                 <div key={page.name} className="flow-root">
-                                    <a href={page.href} className="-m-2 block p-2 font-medium text-gray-900">
+                                    <Link href={page.href} prefetch={false} className="-m-2 block p-2 font-medium text-gray-900">
                                         {page.name}
-                                    </a>
+                                    </Link>
                                 </div>
                             ))}
                         </div>
 
                         <div className="space-y-6 border-t border-gray-200 px-4 py-6">
                             <div className="flow-root">
-                                <a href="#" className="-m-2 block p-2 font-medium text-gray-900">
+                                <Link href="/signin" prefetch={false} className="-m-2 block p-2 font-medium text-gray-900">
                                     Sign in
-                                </a>
+                                </Link>
                             </div>
                             <div className="flow-root">
-                                <a href="#" className="-m-2 block p-2 font-medium text-gray-900">
+                                <Link href="/signup" prefetch={false} className="-m-2 block p-2 font-medium text-gray-900">
                                     Create account
-                                </a>
+                                </Link>
                             </div>
                         </div>
                     </Dialog.Panel>

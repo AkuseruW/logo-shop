@@ -1,9 +1,9 @@
 'use client'
-import { useForm } from "react-hook-form";
 import Link from "next/link";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 interface SignUpData {
     email: string;
@@ -54,20 +54,6 @@ const AuthForm = () => {
         <>
             {errorReq && (
                 <div className="text-center bg-red-100 text-red-500 py-2 px-4 rounded-lg mb-2">
-                    <svg
-                        className="inline-block w-5 h-5 mr-1 -mt-1"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M6 18L18 6M6 6l12 12"
-                        />
-                    </svg>
                     <span className="font-semibold">{errorReq}</span>
                 </div>
             )}

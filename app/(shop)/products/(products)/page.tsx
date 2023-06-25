@@ -1,10 +1,9 @@
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import Pagination from "@/components/pagination";
-import { GetProducts } from '@/controller/products/GetProducts';
+import { GetProducts } from '@/controller/products/getProducts';
 import ProductGridItems from '@/components/layouts/product-grid-items';
 
-export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
     title: 'Products',

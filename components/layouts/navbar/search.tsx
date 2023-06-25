@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 import { Products } from '@prisma/client';
 import { Dispatch, SetStateAction } from 'react';
+
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandList, CommandItem } from '@/components/ui/command';
 
 const SearchDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: Dispatch<SetStateAction<boolean>> }) => {
@@ -28,7 +29,7 @@ const SearchDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: Dis
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup heading="Suggestions">
           {products.map((product: Products, index: number) => (
-            <Link href={`product/${product.slug}`} key={index} className="cursor-pointer" onClick={() => onOpenChange(false)}>
+            <Link href={`product/${product.slug}`} prefetch={false} key={index} className="cursor-pointer" onClick={() => onOpenChange(false)}>
               <CommandItem className="cursor-pointer">
                 {product.name}
               </CommandItem>

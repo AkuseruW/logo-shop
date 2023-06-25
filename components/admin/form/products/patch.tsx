@@ -1,6 +1,5 @@
 'use client'
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import { getError } from '@/utils/error';
 import { Categories, Products } from '@prisma/client';
 import { useRouter } from 'next/navigation';
@@ -69,10 +68,8 @@ export function ProductFormUpdate({ session, product, categories }: ProductFormP
                 router.push(`/dashboard/products/view/${data.slug}?updated=successfully`)
                 router.refresh();
             } else {
-                toast.error(getError(result));
             }
         } catch (error) {
-            toast.error(getError(error));
         } finally {
             setIsLoading(false);
         }

@@ -25,3 +25,15 @@ interface Category {
   name: string;
   image: string;
 }
+
+
+export interface SessionProps {
+  name: string,
+  email: string,
+  sub: string,
+  id: string,
+  role: string,
+  iat: number,
+  exp: number,
+  jti: string
+}

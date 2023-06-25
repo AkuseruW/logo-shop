@@ -1,21 +1,10 @@
 'use client';
-import Link from 'next/link';
 import { useState } from 'react';
-import CartModal from '@/components/cart/modal';
-import MobileMenu from './mobileMenu';
 import SearchDialog from './search';
-import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon, HeartIcon } from '@heroicons/react/24/outline';
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuIndicator,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  NavigationMenuViewport,
-} from "@/components/ui/navigation-menu"
+import MobileMenu from './mobileMenu';
+import CartModal from '@/components/cart/modal';
 import { NavigationMenuHead } from './navigation';
+import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon, HeartIcon } from '@heroicons/react/24/outline';
 
 
 const navigation = [
