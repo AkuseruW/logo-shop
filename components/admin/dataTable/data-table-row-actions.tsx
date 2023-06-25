@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal, Pen, Trash, Eye } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { deleteCategory, deleteProduct } from "@/controller/actions/admin/_delete";
+import { deleteCategory, deleteCustomer, deleteProduct } from "@/controller/actions/admin/_delete";
 import { useToast } from "@/components/ui/use-toast";
 
 
@@ -50,13 +50,13 @@ export function DataTableRowActionsProducts({ row }: any) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[160px]">
-                    <Link href={`/dashboard/products/${row.original.slug}`}>
+                    <Link href={`/dashboard/products/${row.original.slug}`} prefetch={false}>
                         <DropdownMenuItem>
                             <Eye className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
                             View
                         </DropdownMenuItem>
                     </Link>
-                    <Link href={`/dashboard/products/edit/${row.original.slug}`}>
+                    <Link href={`/dashboard/products/edit/${row.original.slug}`} prefetch={false}>
                         <DropdownMenuItem>
                             <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
                             Edit
@@ -87,7 +87,7 @@ export const DataTableRowActionsCategories = ({ row }: any) => {
         if (categoryDelete?.message) {
             setModalIsOpen(false)
             toast({
-                title: "Your product has been deleted.",
+                title: "Your category has been deleted.",
                 description: `${categoryDelete.message}`,
             })
             router.refresh()
@@ -112,7 +112,7 @@ export const DataTableRowActionsCategories = ({ row }: any) => {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[160px]">
-                    <Link href={`/dashboard/categories/edit/${row.original.slug}`}>
+                    <Link href={`/dashboard/categories/edit/${row.original.slug}`} prefetch={false}>
                         <DropdownMenuItem>
                             <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
                             Edit
@@ -143,7 +143,7 @@ export const DataTableRowActionsOrders = ({ row }: any) => {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[160px]">
-                <Link href={`/dashboard/orders/view/${row.original.id}`}>
+                <Link href={`/dashboard/orders/${row.original.id}`}>
                     <DropdownMenuItem>
                         <Eye className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
                         View
@@ -157,24 +157,22 @@ export const DataTableRowActionsOrders = ({ row }: any) => {
 
 export const DataTableRowActionsCustomers = ({ row }: any) => {
     const router = useRouter();
+    const { toast } = useToast()
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const { data: session } = useSession()
-    // @ts-ignore
-    const token = session?.user.accessToken
 
     async function handleDelete() {
-        try {
-            await fetch(`/api/customers?id=${row.original.id}`, {
-                method: "DELETE",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
-            });
-            router.refresh();
-            setModalIsOpen(false);
-        } catch (error) {
-            getError(error);
+        const customerID = row.original.id
+        const data = { customerID, session }
+
+        const customertDelete = await deleteCustomer(data)
+        if (customertDelete?.message) {
+            setModalIsOpen(false)
+            toast({
+                title: "Customer has been deleted.",
+                description: `${customertDelete.message}`,
+            })
+            router.refresh()
         }
     }
 
@@ -196,7 +194,7 @@ export const DataTableRowActionsCustomers = ({ row }: any) => {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[160px]">
-                    <Link href={`/dashboard/customers/view/${row.original.id}`}>
+                    <Link href={`/dashboard/customers/${row.original.id}`} prefetch={false}>
                         <DropdownMenuItem>
                             <Eye className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
                             View

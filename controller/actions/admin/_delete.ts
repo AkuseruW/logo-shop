@@ -64,3 +64,25 @@ export const deleteCategory = async (data: any) => {
     prisma.$disconnect();
     return { message: 'Category deleted successfully' };
 }
+
+
+export const deleteCustomer = async (data: any) => {
+    const { customerID, session } = data
+
+    if (!session || session.user.role !== 'ADMIN') {
+        throw new Error('Unauthorized')
+    }
+
+    // Check if the 'id' is missing
+    if (!customerID) {
+        throw new Error('Missing id')
+    }
+
+    // Delete the product with the given 'id'
+    await prisma.user.delete({
+        where: { id: customerID },
+    });
+
+    prisma.$disconnect();
+    return { message: 'customer deleted successfully' };
+}

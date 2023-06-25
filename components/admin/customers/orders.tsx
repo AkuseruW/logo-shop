@@ -7,11 +7,7 @@ interface Order {
     createdAt: string;
 }
 
-interface OrdersComponentProps {
-    orders: Order[];
-}
-
-const OrdersComponent: React.FC<OrdersComponentProps> = ({ orders }) => {
+const OrdersComponent = ({ orders }: any) => {
     const [currentPage, setCurrentPage] = useState(1);
     const ordersPerPage = 5;
 
@@ -42,7 +38,7 @@ const OrdersComponent: React.FC<OrdersComponentProps> = ({ orders }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {currentOrders.map((order) => (
+                    {currentOrders.map((order: Order) => (
                         <tr key={order.id}>
                             <td className="py-2 px-4 border-b border-gray-300">{order.id}</td>
                             <td className="py-2 px-4 border-b border-gray-300">

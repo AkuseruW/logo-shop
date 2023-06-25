@@ -6,7 +6,6 @@ import { deleteImageFromCloudinary, uploadImageToCloudinary } from "@/lib/cloudi
 
 export const productCreate = async (data: any) => {
     const { name, brand, slug, price, stock, description, category, publish, image, session } = data
-    console.log(session)
 
     if (session.role !== 'ADMIN') {
         throw new Error('only admin can create products')
@@ -46,4 +45,33 @@ export const productCreate = async (data: any) => {
             return { error: 'An error occurred while creating the product' }
         }
     }
+}
+
+
+export const categoryCreate = async (data: any) => {
+    const { name, slug, description, image, session } = data
+    console.log(session)
+
+    if (session.user.role !== 'ADMIN') {
+        throw new Error('only admin can create products')
+    }
+
+    const { image: uploadedImage } = Object.fromEntries(image);
+    const { cover_id, cover_url } = await uploadImageToCloudinary(uploadedImage);
+
+    // Create a new category
+    const category = await prisma.categories.create({
+        data: {
+            name,
+            description,
+            image_id: cover_id,
+            image: cover_url,
+            slug,
+        },
+    });
+
+    prisma.$disconnect();
+
+    // Return a JSON response with a success message
+    return { message: `Category ${category.name} created` }
 }
