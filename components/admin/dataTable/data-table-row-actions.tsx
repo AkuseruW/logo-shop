@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal, Pen, Trash, Eye } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { deleteProduct } from "@/controller/actions/admin/_delete";
+import { deleteCategory, deleteProduct } from "@/controller/actions/admin/_delete";
 import { useToast } from "@/components/ui/use-toast";
 
 
@@ -75,24 +75,22 @@ export function DataTableRowActionsProducts({ row }: any) {
 
 export const DataTableRowActionsCategories = ({ row }: any) => {
     const router = useRouter();
-    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const { toast } = useToast();
     const { data: session } = useSession()
-    // @ts-ignore
-    const token = session?.user.accessToken
+    const [modalIsOpen, setModalIsOpen] = useState(false);
 
-    async function handleDelete() {
-        try {
-            await fetch(`/api/categories?id=${row.original.id}`, {
-                method: "DELETE",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
-            });
-            router.refresh();
-            setModalIsOpen(false);
-        } catch (error) {
-            getError(error);
+    const handleDelete = async () => {
+        const categoryID = row.original.id
+        const data = { categoryID, session }
+
+        const categoryDelete = await deleteCategory(data)
+        if (categoryDelete?.message) {
+            setModalIsOpen(false)
+            toast({
+                title: "Your product has been deleted.",
+                description: `${categoryDelete.message}`,
+            })
+            router.refresh()
         }
     }
 
@@ -114,13 +112,6 @@ export const DataTableRowActionsCategories = ({ row }: any) => {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[160px]">
-                    <Link href={`/dashboard/categories/view/${row.original.slug}`}>
-                        <DropdownMenuItem>
-                            <Eye className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-                            View
-                        </DropdownMenuItem>
-                    </Link>
-
                     <Link href={`/dashboard/categories/edit/${row.original.slug}`}>
                         <DropdownMenuItem>
                             <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />

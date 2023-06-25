@@ -30,5 +30,37 @@ export const deleteProduct = async (data: any) => {
     prisma.$disconnect();
     return { message: 'Product deleted successfully', productID: product?.name };
 
-    return
+}
+
+export const deleteCategory = async (data: any) => {
+    const { categoryID, session } = data
+
+    if (!session || session.user.role !== 'ADMIN') {
+        throw new Error('Unauthorized')
+    }
+
+    // Check if the 'id' is missing
+    if (!categoryID) {
+        throw new Error('Missing id')
+    }
+
+    // Delete the image with the given 'id'
+    const deleteImg = await prisma.products.findUnique({
+        where: { id: categoryID },
+    });
+
+    deleteImageFromCloudinary(deleteImg?.cover_id as string)
+
+    // Delete all products associated with the given category
+    await prisma.$transaction([
+        prisma.products.deleteMany({
+            where: { category: { some: { id: categoryID } } }
+        }),
+        prisma.categories.delete({
+            where: { id: categoryID },
+        })
+    ])
+
+    prisma.$disconnect();
+    return { message: 'Category deleted successfully' };
 }
