@@ -1,21 +1,14 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { lastOrder } from "@/controller/_dashboard/dashboard";
 
-interface Order {
-    id: string;
-    user: {
-        name: string;
-        email: string;
-    };
-    totalPrice: number;
-}
 
 const getLastOrder = async () => {
-    const res = await fetch(`${process.env.BASE_URL}/api/dashboard/get-last-order`)
-    return res.json()
+    const orders = await lastOrder()
+    return orders
 }
 
 export const RecentSales = async () => {
-    const { orders }: { orders: Order[] } = await getLastOrder();
+    const { orders } = await getLastOrder();
 
     return (
         <div className="space-y-8">
@@ -38,7 +31,7 @@ export const RecentSales = async () => {
                             </>
                         )}
                     </div>
-                    <div className="ml-auto font-medium">+&euro;{order.totalPrice.toFixed(2)}</div>
+                    <div className="ml-auto font-medium">+&euro;{order.totalPrice!.toFixed(2)}</div>
                 </div>
             ))}
         </div>

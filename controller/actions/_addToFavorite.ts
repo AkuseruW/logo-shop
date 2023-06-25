@@ -9,7 +9,6 @@ interface AddToFavoriteData {
 }
 
 export const addToFavoriteAction = async (data: AddToFavoriteData) => {
-    console.log(data)
     const { item, session } = data;
     const { id: sessionId } = session;
     const { id: productId } = item;

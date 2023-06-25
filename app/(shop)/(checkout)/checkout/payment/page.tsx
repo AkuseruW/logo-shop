@@ -15,13 +15,12 @@ export const metadata: Metadata = {
     description: 'Complete your payment process',
 };
 
-const Payment = () => {
+const Payment = async () => {
     const cookieStore = cookies();
     const cartItems = cookieStore.get(CART_COOKIE_KEY);
     const items = cartItems ? JSON.parse(cartItems.value) : [];
     const addressCookies = cookieStore.get(SHIPPING_ADDRESS_KEY);
     const shippingAddress = addressCookies ? JSON.parse(addressCookies.value) : [];
-
     const total = items.reduce(
         (acc: number, product: ProductCart) => acc + product.price * product.quantity,
         0
