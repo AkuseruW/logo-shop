@@ -29,25 +29,22 @@ const AuthForm = () => {
     } = useForm<Inputs>();
 
     const onSubmit = async ({ email, password }: SignUpData) => {
-        try {
-            setLoading(true);
-            const callback = await signIn("credentials", {
-                email,
-                password,
-                redirect: false,
-            });
+        setLoading(true);
+        const callback = await signIn("credentials", {
+            email,
+            password,
+            redirect: false,
+        });
 
-            if (callback?.error) {
-                setLoading(false);
-                setErrorReq(callback.error);
-            } else {
-                setLoading(false);
-                router.refresh();
-                router.push("/");
-            }
-        } catch (error) {
-            console.log(error);
+        if (callback?.error) {
+            setLoading(false);
+            setErrorReq(callback.error);
+        } else {
+            setLoading(false);
+            router.refresh();
+            router.push("/");
         }
+
     };
 
     return (

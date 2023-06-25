@@ -64,14 +64,13 @@ export default async function Product({ params }: any) {
         <div className="lg:border-r lg:border-gray-200 lg:pr-8">
           <div className="flex items-center ml-2">
             <h2 className="text-xl font-bold pb-8">{product.name}</h2>
-            {/* <AddToFavorite product={product} session={userSession} isFavorite={product?.isFavorite} /> */}
           </div>
           <p className="text-lg">
             {product.description}
           </p>
         </div>
         {/* Options */}
-        <Options item={product} averageRating={averageRating} />
+        <Options item={product} averageRating={averageRating} session={userSession}/>
       </div>
 
       <div className="mx-auto max-w-2xl px-4 pt-10 pb-16 sm:px-6  lg:gap-x-8 lg:px-8 lg:pt-16 lg:pb-24">

@@ -34,7 +34,6 @@ export const updatePasswordActions = async (currentPassword: string, newPassword
     if (!isPasswordValid) {
         return { error: 'Invalid current password' }
     }
-    console.log('updatePassword')
 
     const hashedPassword = await bcrypt.hash(newPassword, 12);
     const updatePassword = await prisma.user.update({

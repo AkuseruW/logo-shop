@@ -39,7 +39,6 @@ export async function resetTokenReqActions(data: RegisterData) {
 export async function resetTokenChangePasswordActions(data: { password: string }, token: string) {
     const { password } = data
     const tokendecoded = await verifyJwtPasswordReset(token);
-    console.log(tokendecoded)
 
     if (tokendecoded.expired) {
         return { error: "Token expired" }

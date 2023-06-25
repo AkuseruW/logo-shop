@@ -6,7 +6,6 @@ export async function GetProduct(slug: string) {
     const session = await getSession();
     // @ts-ignore
     const userId = session?.id;
-    console.log(userId);
 
     let product = await prisma.products.findUnique({
         where: { slug: slug as string },
@@ -22,7 +21,6 @@ export async function GetProduct(slug: string) {
     }
 
     const isFavorite = !!userId && product.FavoriteProduct.some((fav: any) => fav.userId === userId);
-    console.log(isFavorite);
     const { FavoriteProduct, ...productWithoutFavorite } = product;
 
     const updatedProduct = {

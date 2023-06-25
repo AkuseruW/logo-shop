@@ -1,52 +1,40 @@
 'use client'
+import { Products } from '@prisma/client';
+import { ToastAction } from '@/components/ui/toast';
+import { useToast } from '@/components/ui/use-toast';
 import { HeartIcon } from '@heroicons/react/24/outline';
-import { useRouter } from 'next/navigation';
-import { Product } from '@/type';
+import { addToFavoriteAction } from '@/controller/actions/_addToFavorite';
 
-interface AddToFavoriteProps {
-    product: Product;
-    session: any;
-    isFavorite: boolean;
-}
+const AddToFavorite = ({ item, session }: { item: Products, session: any }) => {
+    const { toast } = useToast()
 
-
-const AddToFavorite: React.FC<AddToFavoriteProps> = ({ product, session, isFavorite }) => {
-    const router = useRouter()
-    // @ts-ignore
-    const { accessToken: token } = session
     const toggleFavorite = async () => {
-        try {
-            const response = await fetch('/api/add-to-favorite', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    productId: product.id,
-                    userId: token,
-                    isFavorite: !isFavorite,
-                }),
-            });
+        const data = { item, session }
+        const response = await addToFavoriteAction(data)
 
-            if (response.ok) {
-                router.refresh()
-            } else {
-                console.error('Une erreur s\'est produite lors de la requête.');
-            }
-        } catch (error) {
-            console.error('Une erreur s\'est produite :', error);
+        if (response.message) {
+            toast({
+                description: `${response.message}`,
+                action: (
+                    <ToastAction altText="Goto schedule to undo">Undo</ToastAction>
+                ),
+            })
         }
+
     };
+
     return (
         <button
-            className="text-gray-400 hover:text-gray-500 pb-8 pl-2"
             onClick={toggleFavorite}
+            type="submit"
+            className="mt-2 flex w-full items-center justify-center rounded-md border border-transparent bg-red-600 py-3 px-8 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:bg-red-700 focus:ring-offset-2"
         >
-            <HeartIcon
-                className={`h-6 w-6 ${isFavorite ? 'text-red-500' : 'text-gray-400'}`}
-                style={{ fill: isFavorite ? '#EF4444' : 'none' }}
-            />
+            <span className="mr-1">
+                <HeartIcon className="h-6 w-6" />
+            </span>
+            Add to favorite
         </button>
+
     )
 }
 

@@ -18,7 +18,6 @@ const getProducts = async (searchParams: string) => {
 const Products = async ({ searchParams }: { searchParams: string }) => {
     const { products, totalPages } = await getProducts(searchParams);
     const url = '/products';
-    console.log(products)
 
     if (products && products.length > 0) {
         return (
