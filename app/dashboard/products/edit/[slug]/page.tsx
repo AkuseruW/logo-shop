@@ -17,7 +17,6 @@ const getCategories = async () => {
 }
 
 export default async function Page({ params }: { params: { slug: string } }) {
-  const session = await getServerSession(authOptions)
   const { slug } = params;
   const { product } = await getProduct({ slug });
   const { categories } = await getCategories()
