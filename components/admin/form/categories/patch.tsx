@@ -1,32 +1,25 @@
 'use client'
-import { useEffect, useState } from 'react';
-import { getError } from '@/utils/error';
-import { Categories } from '@prisma/client';
-import { useRouter } from 'next/navigation';
-import { SubmitHandler, useForm } from 'react-hook-form';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { Categories } from '@prisma/client';
+import { useEffect, useState } from 'react';
+import { useToast } from '@/components/ui/use-toast';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { updateCategory } from '@/controller/actions/admin/_update';
 
-type FormData = {
-    id: string
-    name: string
-    price: number
-    slug: string
-    description?: string
-};
+interface CategoryToUpdate extends Categories {
+    image: any
+}
 
-type CategoryFormUpdateProps = {
-    session: any;
-    category: Categories;
-};
 
-export function CategoryFormUpdate({ session, category }: CategoryFormUpdateProps) {
+export function CategoryFormUpdate({ category }: {category: Categories;}) {
     const router = useRouter()
+    const { toast } = useToast()
     const [name, setName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [selectedFile, setSelectedFile] = useState<FileList | null>(null);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
-    const token = session?.user?.accessToken;
-    const { register, handleSubmit, setValue, formState: { errors }, watch } = useForm<FormData>();
+    const { register, handleSubmit, setValue, formState: { errors }, watch } = useForm<CategoryToUpdate>();
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
@@ -41,31 +34,26 @@ export function CategoryFormUpdate({ session, category }: CategoryFormUpdateProp
         }
     };
 
-    const onSubmit: SubmitHandler<FormData> = async (data) => {
+    const onSubmit: SubmitHandler<CategoryToUpdate> = async (data) => {
         const formData = new FormData();
+        let dataForController = { ...data, id: category.id }
+
         if (selectedFile) {
             formData.append('image', selectedFile[0]);
+            dataForController = { ...dataForController, image: formData };
         }
-        formData.append('data', JSON.stringify(data));
 
-        try {
-            setIsLoading(true);
-            const response = await fetch(`/api/categories?id=${category.id}`, {
-                method: 'PATCH',
-                body: formData,
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            const result = await response.json();
-            if (response.ok) {
-                router.push(`/dashboard/categories/view/${data.slug}?updated=successfully`)
-                router.refresh();
-            } else {
-            }
-        } catch (error) {
-        } finally {
+        setIsLoading(true);
+        const updatedCategory = await updateCategory(dataForController);
+
+        if (updatedCategory.message) {
             setIsLoading(false);
+            toast({
+                title: "Updated successfully",
+                description: `${updatedCategory.message}`,
+            });
+            router.push(`/dashboard/categories`)
+            router.refresh();
         }
     };
 
@@ -159,7 +147,5 @@ export function CategoryFormUpdate({ session, category }: CategoryFormUpdateProp
                 </button>
             </div>
         </form>
-
-
     );
 }

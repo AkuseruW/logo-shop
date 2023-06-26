@@ -25,7 +25,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
   return (
     <div className="container mx-auto px-4">
       <h2 className="mt-12 text-2xl font-bold">Edit {product.name}</h2>
-      <ProductFormUpdate session={session} product={product} categories={categories} />
+      <ProductFormUpdate product={product} categories={categories} />
     </div>
   );
 }

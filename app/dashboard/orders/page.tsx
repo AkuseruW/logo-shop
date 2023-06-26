@@ -1,23 +1,14 @@
-import { User } from "@prisma/client";
-import { getServerSession } from 'next-auth';
 import { DataTable } from '@/components/admin/dataTable';
-import { Order as PrismaOrder } from '@prisma/client';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { columnsOrder } from '@/components/admin/dataTable/columns';
 import { getOrdersPaginate } from "@/controller/_dashboard/orders/_get";
 
-interface Order extends PrismaOrder {
-    user: User;
-}
-
-const getOrders = async ({ session, searchParams }: { session: any, searchParams: string }) => {
-    const orders = await getOrdersPaginate(session, searchParams as any);
+const getOrders = async ({ searchParams }: { searchParams: string }) => {
+    const orders = await getOrdersPaginate(searchParams as any);
     return orders;
 }
 
 const Orders = async ({ searchParams }: { searchParams: string }) => {
-    const session = await getServerSession(authOptions)
-    const { orders, totalPages } = await getOrders({ session, searchParams })
+    const { orders, totalPages } = await getOrders({ searchParams })
     const url = '/dashboard/orders';
 
     return (

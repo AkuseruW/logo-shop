@@ -1,37 +1,29 @@
 'use client'
-import { useEffect, useState } from 'react';
-import { Categories, Products } from '@prisma/client';
-import { useRouter } from 'next/navigation';
-import { SubmitHandler, useForm } from 'react-hook-form';
 import Image from 'next/image';
-
-type FormData = {
-    id: string;
-    name: string;
-    price: number;
-    stock: number;
-    brand: string;
-    description: string;
-    slug: string;
-    cover: FileList;
-    publish?: boolean;
-    category: Categories;
-};
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/use-toast';
+import { Categories, Products } from '@prisma/client';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { updateProduct } from '@/controller/actions/admin/_update';
 
 type ProductFormProps = {
-    session: any;
     product: Products;
     categories: Categories[];
 };
 
+interface ProductToUpdate extends Products {
+    category: string,
+    image: any
+}
 
-export function ProductFormUpdate({ session, product, categories }: ProductFormProps) {
+export function ProductFormUpdate({ product, categories }: ProductFormProps) {
     const router = useRouter()
+    const { toast } = useToast()
     const [isLoading, setIsLoading] = useState(false);
     const [selectedFile, setSelectedFile] = useState<FileList | null>(null);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
-    const token = session?.user?.accessToken;
-    const { register, handleSubmit, setValue, formState: { errors }, watch } = useForm<FormData>();
+    const { register, handleSubmit, setValue, formState: { errors }, watch } = useForm<ProductToUpdate>();
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
@@ -47,31 +39,26 @@ export function ProductFormUpdate({ session, product, categories }: ProductFormP
         }
     };
 
-    const onSubmit: SubmitHandler<FormData> = async (data) => {
+    const onSubmit: SubmitHandler<ProductToUpdate> = async (data) => {
         const formData = new FormData();
+        let dataForController = { ...data, id: product.id }
+
         if (selectedFile) {
             formData.append('image', selectedFile[0]);
+            dataForController = { ...dataForController, image: formData };
         }
-        formData.append('data', JSON.stringify(data));
 
-        try {
-            setIsLoading(true);
-            const response = await fetch(`/api/products?id=${product.id}`, {
-                method: 'PATCH',
-                body: formData,
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            const result = await response.json();
-            if (response.ok) {
-                router.push(`/dashboard/products/view/${data.slug}?updated=successfully`)
-                router.refresh();
-            } else {
-            }
-        } catch (error) {
-        } finally {
+        setIsLoading(true);
+        const updatedProduct = await updateProduct(dataForController);
+
+        if (updatedProduct.message) {
             setIsLoading(false);
+            toast({
+                title: "Updated successfully",
+                description: `${updatedProduct.message}`,
+            });
+            router.push(`/dashboard/products/${data.slug}`)
+            router.refresh();
         }
     };
 

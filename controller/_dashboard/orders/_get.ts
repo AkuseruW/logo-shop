@@ -2,11 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 
 
-export const getOrdersPaginate = async (session: any, searchParams: { page: string, search: string }) => {
-
-    if (!session || session.user.role !== 'ADMIN') {
-        throw new Error('Unauthorized')
-    }
+export const getOrdersPaginate = async (searchParams: { page: string, search: string }) => {
 
     const page = searchParams.page
     const search = searchParams.search
@@ -39,11 +35,7 @@ export const getOrdersPaginate = async (session: any, searchParams: { page: stri
     return { orders, totalPages }
 }
 
-export const getOrdersById = async (session: any, id: string) => {
-    
-    if (!session || session.role !== 'ADMIN') {
-        throw new Error('Unauthorized')
-    }
+export const getOrdersById = async (id: string) => {
     // Fetch the order data
     const order = await prisma.order.findUnique({
         where: { id: id as string },

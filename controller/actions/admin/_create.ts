@@ -35,7 +35,7 @@ export const productCreate = async (data: any) => {
         });
 
         await prisma.$disconnect();
-        return { message: `Product ${product.name} created` }
+        return { message: `Product ${product.name} created successfully` }
 
     } catch (error: any) {
         await deleteImageFromCloudinary(cover_id);

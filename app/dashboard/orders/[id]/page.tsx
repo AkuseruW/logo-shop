@@ -5,8 +5,7 @@ import { getOrdersById } from "@/controller/_dashboard/orders/_get";
 
 
 const getOrders = async ({ id }: { id: string }) => {
-  const session = await getSession();
-  const order = await getOrdersById(session, id);
+  const order = await getOrdersById(id);
   return order;
 };
 

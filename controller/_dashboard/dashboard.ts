@@ -2,7 +2,6 @@ import { prisma } from '@/lib/prisma';
 
 export const totalCustomers = async () => {
     const customers = await prisma.user.count();
-
     return { customers }
 }
 
