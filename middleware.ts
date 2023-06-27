@@ -13,6 +13,7 @@ export const middleware = async (req: NextRequest) => {
             req.nextUrl.pathname.startsWith("/profile") ||
             req.nextUrl.pathname.startsWith("/dashboard") ||
             req.nextUrl.pathname.startsWith("/admin") ||
+            req.nextUrl.pathname.startsWith("/favorite") ||
             req.nextUrl.pathname.startsWith("/checkout")
         ) {
             const signinUrl = new URL('/signin', req.url);

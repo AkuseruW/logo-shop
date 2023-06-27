@@ -4,21 +4,26 @@ import { ToastAction } from '@/components/ui/toast';
 import { useToast } from '@/components/ui/use-toast';
 import { HeartIcon } from '@heroicons/react/24/outline';
 import { addToFavoriteAction } from '@/controller/actions/_addToFavorite';
+import { useRouter } from 'next/navigation';
 
 const AddToFavorite = ({ item, session }: { item: Products, session: any }) => {
+    const router = useRouter()
     const { toast } = useToast()
 
     const toggleFavorite = async () => {
-        const data = { item, session }
-        const response = await addToFavoriteAction(data)
+        console.log(session)
+        if (!session) {
+            const callbackUrl = encodeURIComponent(`/products/${item.slug}`);
+            router.push(`/signin?callbackUrl=${callbackUrl}`)
+        } else {
+            const data = { item, session }
+            const response = await addToFavoriteAction(data)
 
-        if (response.message) {
-            toast({
-                description: `${response.message}`,
-                action: (
-                    <ToastAction altText="Goto schedule to undo">Undo</ToastAction>
-                ),
-            })
+            if (response.message) {
+                toast({
+                    description: `${response.message}`,
+                })
+            }
         }
 
     };

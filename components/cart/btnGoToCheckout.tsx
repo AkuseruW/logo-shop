@@ -1,17 +1,11 @@
 'use client'
-import { useSession } from "next-auth/react";
 import { useRouter } from 'next/navigation';
 
 export default function BtnCheckout() {
     const router = useRouter();
-    const { data: session } = useSession();
 
     function handleCheckoutClick() {
-        if (session) {
-            router.push("/checkout");
-        } else {
-            router.push("/signin");
-        }
+        router.push("/checkout");
     }
 
     return (

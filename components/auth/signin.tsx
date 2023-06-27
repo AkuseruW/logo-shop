@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface SignUpData {
     email: string;
@@ -19,6 +19,8 @@ type Inputs = {
 
 const AuthForm = () => {
     const router = useRouter();
+    const searchParams = useSearchParams()
+    const callbackUrl = searchParams.get('callbackUrl')
     const [loading, setLoading] = useState(false);
     const [errorReq, setErrorReq] = useState("");
 
@@ -42,7 +44,11 @@ const AuthForm = () => {
         } else {
             setLoading(false);
             router.refresh();
-            router.push("/");
+            if (callbackUrl) {
+                router.push(callbackUrl);
+            } else {
+                router.push("/");
+            }
         }
 
     };

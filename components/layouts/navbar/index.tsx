@@ -6,6 +6,7 @@ import { Products } from '@prisma/client';
 import CartModal from '@/components/cart/modal';
 import { NavigationMenuHead } from './navigation';
 import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, HeartIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
 
 
 const navigation = [
@@ -44,13 +45,6 @@ const Navbar = ({ products }: { products: Products[] }) => {
 
             {/* Navigation */}
             <div className="flex-grow hidden lg:flex justify-center w-64">
-              {/* <div>
-                {navigation.map((page) => (
-                  <Link key={page.name} href={page.href} className="text-sm font-medium text-gray-700 hover:text-gray-800 mx-4">
-                    {page.name}
-                  </Link>
-                ))}
-              </div> */}
               <NavigationMenuHead />
             </div>
 
@@ -69,9 +63,9 @@ const Navbar = ({ products }: { products: Products[] }) => {
 
               {/* Favorite */}
               <div className="flex ml-2">
-                <button className="p-2 text-gray-400 hover:text-gray-500">
+                <Link href={`/favorite`} className="p-2 text-gray-400 hover:text-gray-500">
                   <HeartIcon className="h-6 w-6" />
-                </button>
+                </Link>
               </div>
 
               {/* Cart */}
