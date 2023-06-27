@@ -76,7 +76,6 @@ export const updateCategory = async (data: CategoryToUpdate) => {
     let cover_id = existingCategory?.image_id;
     let cover_url = existingCategory?.image;
 
-
     if (image) {
         if (existingCategory?.image_id) {
             await deleteImageFromCloudinary(existingCategory.image_id);
@@ -98,8 +97,6 @@ export const updateCategory = async (data: CategoryToUpdate) => {
             slug: slug || existingCategory?.slug,
         },
     });
-
-    console.log(updatedCategory)
 
     await prisma.$disconnect();
 

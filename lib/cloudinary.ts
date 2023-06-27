@@ -22,8 +22,6 @@ export const uploadImageToCloudinary = async (image: any) => {
   const responseData = await response.json()
   const { public_id, secure_url } = responseData
 
-  console.log(responseData)
-
   return { cover_id: public_id, cover_url: secure_url }
 };
 

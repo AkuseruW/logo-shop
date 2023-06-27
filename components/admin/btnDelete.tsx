@@ -5,22 +5,14 @@ import { useToast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
 import { deleteProduct } from "@/controller/actions/admin/_delete";
 
-export default function BtnDelete({
-  items,
-  session,
-}: {
-  items: any;
-  session: any;
-}) {
+export default function BtnDelete({ items, }: { items: any; }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const token = session;
   const router = useRouter();
   const { toast } = useToast()
-  console.log(items)
 
   const handleDelete = async () => {
     const productID = items.id
-    const data = { productID, session }
+    const data = { productID }
     const productDelete = await deleteProduct(data)
     if (productDelete?.message) {
       setModalIsOpen(false)

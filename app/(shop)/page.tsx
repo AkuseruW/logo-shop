@@ -29,7 +29,7 @@ const Home = async () => {
     <main>
       <Banner />
       <div className=" mx-auto py-8">
-        <h2 className="text-3xl font-bold text-gray-800 mb-4 mx-4">New arrives</h2>
+        <h2 className="text-3xl font-bold text-gray-800 mb-4 mx-4">New arrivals</h2>
         <div className="py-8">
           <div className="mt-6 space-y-12 lg:grid lg:grid-cols-4 lg:gap-x-6 lg:space-y-0">
             {/* affichage des produits */}

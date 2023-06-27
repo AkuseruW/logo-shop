@@ -22,7 +22,7 @@ const TopHeaderRight = ({ session }: { session: any | null }) => {
         <div className="header-right flex items-center justify-end space-x-4">
             <div className="dropdown relative">
                 <button className="uppercase tracking-wide font-medium focus:outline-none">
-                    Currency
+                    Eur
                 </button>
                 {/* {isDropdownOpen && ( */}
                 <ul className="dropdown-box absolute right-0 z-10 hidden bg-white py-1.5 rounded-md shadow-lg">

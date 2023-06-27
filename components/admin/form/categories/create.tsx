@@ -19,11 +19,7 @@ type FormData = {
     category: string;
 };
 
-type ProductFormProps = {
-    session: any;
-};
-
-export function CategoryFormCreate({ session }: ProductFormProps) {
+export function CategoryFormCreate() {
     const router = useRouter()
     const { toast } = useToast()
     const [name, setName] = useState('');
@@ -56,7 +52,7 @@ export function CategoryFormCreate({ session }: ProductFormProps) {
         const formData = new FormData();
         if (selectedFile) {
             formData.append('image', selectedFile[0]);
-            const dataWithImage = { ...data, image: formData, session };
+            const dataWithImage = { ...data, image: formData };
             setLoading(true);
             const newCategory = await categoryCreate(dataWithImage);
 

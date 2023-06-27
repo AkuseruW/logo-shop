@@ -61,7 +61,7 @@ export default async function Page({ params, searchParams }: { params: { slug: s
             Description: {product.description}
           </p>
           <div>
-            <BtnDelete items={product} session={session} />
+            <BtnDelete items={product} />
             <Link href={`/dashboard/products/edit/${product.slug}`}
               className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
             >

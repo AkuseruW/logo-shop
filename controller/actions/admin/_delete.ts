@@ -4,11 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { deleteImageFromCloudinary } from "@/lib/cloudinary";
 
 export const deleteProduct = async (data: any) => {
-    const { productID, session } = data
-
-    if (!session || session.user.role !== 'ADMIN') {
-        throw new Error('Unauthorized')
-    }
+    const { productID } = data
 
     // Check if the 'id' is missing
     if (!productID) {
@@ -33,11 +29,7 @@ export const deleteProduct = async (data: any) => {
 }
 
 export const deleteCategory = async (data: any) => {
-    const { categoryID, session } = data
-
-    if (!session || session.user.role !== 'ADMIN') {
-        throw new Error('Unauthorized')
-    }
+    const { categoryID } = data
 
     // Check if the 'id' is missing
     if (!categoryID) {
@@ -67,11 +59,7 @@ export const deleteCategory = async (data: any) => {
 
 
 export const deleteCustomer = async (data: any) => {
-    const { customerID, session } = data
-
-    if (!session || session.user.role !== 'ADMIN') {
-        throw new Error('Unauthorized')
-    }
+    const { customerID } = data
 
     // Check if the 'id' is missing
     if (!customerID) {

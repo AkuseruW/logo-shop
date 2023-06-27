@@ -5,11 +5,7 @@ import { deleteImageFromCloudinary, uploadImageToCloudinary } from "@/lib/cloudi
 
 
 export const productCreate = async (data: any) => {
-    const { name, brand, slug, price, stock, description, category, publish, image, session } = data
-
-    if (session.role !== 'ADMIN') {
-        throw new Error('only admin can create products')
-    }
+    const { name, brand, slug, price, stock, description, category, publish, image } = data
 
     const { image: uploadedImage } = Object.fromEntries(image);
     const { cover_id, cover_url } = await uploadImageToCloudinary(uploadedImage);
@@ -49,12 +45,7 @@ export const productCreate = async (data: any) => {
 
 
 export const categoryCreate = async (data: any) => {
-    const { name, slug, description, image, session } = data
-    console.log(session)
-
-    if (session.user.role !== 'ADMIN') {
-        throw new Error('only admin can create products')
-    }
+    const { name, slug, description, image } = data
 
     const { image: uploadedImage } = Object.fromEntries(image);
     const { cover_id, cover_url } = await uploadImageToCloudinary(uploadedImage);

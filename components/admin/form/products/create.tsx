@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
 import { useToast } from "@/components/ui/use-toast";
 import { productCreate } from '@/controller/actions/admin/_create';
+import { Categories } from '@prisma/client';
 
 
 type Data = {
@@ -20,14 +21,7 @@ type Data = {
     category: string;
 };
 
-
-type ProductFormProps = {
-    session: any;
-    categories: any;
-};
-
-
-export function ProductForm({ session, categories }: ProductFormProps) {
+export function ProductForm({ categories }: {categories: Categories[]}) {
     const router = useRouter()
     const { toast } = useToast()
     const [name, setName] = useState('');
@@ -60,7 +54,7 @@ export function ProductForm({ session, categories }: ProductFormProps) {
         const formData = new FormData();
         if (selectedFile) {
             formData.append('image', selectedFile[0]);
-            const dataWithImage = { ...data, image: formData, session };
+            const dataWithImage = { ...data, image: formData };
             setLoading(true);
             const newProduct = await productCreate(dataWithImage);
 
