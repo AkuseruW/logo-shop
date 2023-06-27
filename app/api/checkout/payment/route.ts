@@ -34,7 +34,7 @@ export async function POST(request: Request) {
           metadata: { productId: product.id }
         },
       },
-      tax_rates: ["txr_1NDoYJAdBPRBiTy5naS1LXb2"],
+      tax_rates: [`${process.env.TAXE_RATES}`],
       quantity: product.quantity,
     });
   }
@@ -50,7 +50,7 @@ export async function POST(request: Request) {
     metadata: { shippingAddress },
     shipping_options: [
       {
-        shipping_rate: "shr_1NDXF3AdBPRBiTy5X9h69DXJ",
+        shipping_rate: `${process.env.SHIPPING_RATE}`,
       }
     ],
     success_url: `${process.env.BASE_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
