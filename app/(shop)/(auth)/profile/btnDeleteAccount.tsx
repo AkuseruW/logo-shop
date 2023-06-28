@@ -1,8 +1,10 @@
 'use client'
 import { signOut, useSession } from "next-auth/react"
 import { deleteAccount } from "@/controller/actions/auth/_deleteAccount"
+import { useToast } from "@/components/ui/use-toast"
 
 const BtnDeleteAccount = () => {
+    const { toast } = useToast()
     const { data: session } = useSession()
     const user = session?.user
 
@@ -10,6 +12,14 @@ const BtnDeleteAccount = () => {
         const deleteA = await deleteAccount(user)
         if (deleteA.success) {
             await signOut()
+        }
+        
+        if (deleteA.error) {
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: `${deleteA.error}`,
+            })
         }
     }
 

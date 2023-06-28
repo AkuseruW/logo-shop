@@ -174,6 +174,14 @@ export const DataTableRowActionsCustomers = ({ row }: any) => {
             })
             router.refresh()
         }
+        if (customertDelete.error) {
+            setModalIsOpen(false)
+            toast({
+                variant: "destructive",
+                title: "Error.",
+                description: `${customertDelete.error}`,
+            })
+        }
     }
 
     return (

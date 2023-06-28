@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { deleteImageFromCloudinary } from "@/lib/cloudinary";
+import { error } from "console";
 
 export const deleteProduct = async (data: any) => {
     const { productID } = data
@@ -60,10 +61,25 @@ export const deleteCategory = async (data: any) => {
 
 export const deleteCustomer = async (data: any) => {
     const { customerID } = data
-
+    console.log(customerID)
     // Check if the 'id' is missing
     if (!customerID) {
-        throw new Error('Missing id')
+        return { error: 'Missing id' }
+    }
+
+    // Retrieve the user information
+    const customer = await prisma.user.findUnique({
+        where: { id: customerID },
+    });
+
+    // Check if the user exists
+    if (!customer) {
+        return { error: 'Customer not found' };
+    }
+
+    // Check if the user is an admin
+    if (customer.role === 'ADMIN') {
+        return { error: 'Cannot delete admin user' };
     }
 
     // Delete the product with the given 'id'
