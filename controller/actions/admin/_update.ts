@@ -49,7 +49,7 @@ export const updateProduct = async (data: ProductToUpdate) => {
             slug: slug || existingProduct?.slug,
             publish: publish ?? existingProduct?.publish,
             category: {
-                connect: {
+                set: {
                     id: category || existingProduct?.category?.[0]?.id,
                 },
             },

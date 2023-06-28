@@ -13,7 +13,7 @@ const SearchDialog = ({ open, onOpenChange, products }: { open: boolean, onOpenC
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup heading="Suggestions">
           {products.map((product: Products, index: number) => (
-            <Link href={`product/${product.slug}`} prefetch={false} key={index} className="cursor-pointer" onClick={() => onOpenChange(false)}>
+            <Link href={`/products/${product.slug}`} prefetch={false} key={index} className="cursor-pointer" onClick={() => onOpenChange(false)}>
               <CommandItem className="cursor-pointer">
                 {product.name}
               </CommandItem>

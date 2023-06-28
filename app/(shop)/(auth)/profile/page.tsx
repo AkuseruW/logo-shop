@@ -1,11 +1,13 @@
 import Link from 'next/link'
 import { Metadata } from 'next'
+import BtnDeleteAccount from './btnDeleteAccount';
 
 export const metadata: Metadata = {
   title: 'Profile',
 }
 
 const Profile = () => {
+
   return (
     <div className="container mx-auto py-8">
       <div className="mt-16">
@@ -22,10 +24,7 @@ const Profile = () => {
           <p className="text-gray-600">View and track your orders</p>
         </Link>
 
-        <Link href="/profile/settings" className="bg-white p-8 rounded-lg shadow-lg text-center hover:shadow-xl transition duration-300 transform hover:scale-105" passHref>
-          <h3 className="text-3xl font-semibold text-gray-800 mb-4">Settings</h3>
-          <p className="text-gray-600">Manage your profile settings</p>
-        </Link>
+        <BtnDeleteAccount />
       </div>
     </div>
   );

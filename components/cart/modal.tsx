@@ -30,6 +30,12 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
         router.refresh();
     };
 
+    const handleCartClick = () => {
+        router.refresh()
+        router.push('/cart');
+        onClose();
+    };
+
     return (
         <Transition.Root show={isOpen} as={Fragment}>
             <Dialog as="div" className="relative z-10" onClose={onClose}>
@@ -128,13 +134,12 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                                             </div>
                                             <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
                                             <div className="mt-6">
-                                                <Link
-                                                    href="/cart"
+                                                <button
                                                     className="flex items-center justify-center rounded-md border border-transparent bg-black py-3 px-8 text-base font-medium text-white hover:bg-stone-800 focus:outline-none focus:ring-2 focus:bg-black-500 focus:ring-offset-2 shadow-sm"
-                                                    onClick={onClose}
+                                                    onClick={handleCartClick}
                                                 >
                                                     My Cart
-                                                </Link>
+                                                </button>
                                             </div>
                                             <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
                                                 <p>
